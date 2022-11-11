@@ -1,14 +1,13 @@
 import Canvas from './Engine/Canvas/Canvas';
 import ConsoleHandler from './Engine/ErrorHandling/ConsoleHandler';
 import Debugging from './Debug/Debugging';
-import FileHandler from './Engine/ErrorHandling/FileHandler';
 import Game from './Game';
 import GroupHandler from './Engine/ErrorHandling/GroupHandler';
 import ImageLoader from './Engine/Assets/ImageLoader';
 import Vector from './Engine/Math/Vector';
 import images from './assets/images.json';
 
-new Canvas('canvas', new Vector(320, 180), 5);
+new Canvas('canvas', new Vector(640, 360), 2);
 
 window.debugging = new Debugging();
 
@@ -23,7 +22,6 @@ window.addEventListener('error', e => {
     const metaData: Map<string, unknown> = new Map();
     const handler = new GroupHandler([
         new ConsoleHandler(),
-        new FileHandler(),
     ]);
     handler.handle(e, metaData);
 });
