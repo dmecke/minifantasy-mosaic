@@ -1,12 +1,15 @@
 import Fps from './Engine/Debug/Fps';
 import Grid from './Engine/Type/Grid';
 import ImageLoader from './Engine/Assets/ImageLoader';
+import Mosaic from './Pattern/Mosaic';
+import Pattern from './Pattern/Pattern';
 import Vector from './Engine/Math/Vector';
 import config from './assets/config.json';
 
 export default class Game {
     readonly fps = new Fps();
-    private _timer = 0;
+    private zoom = 4;
+    private pattern: Pattern = new Mosaic(this.zoom);
 
     start(): void {
         requestAnimationFrame(() => this.update());
@@ -17,14 +20,10 @@ export default class Game {
             this.fps.tick();
         }
 
-        this._timer++;
-
         const tempCanvas = document.createElement('canvas');
         const tempCtx = tempCanvas.getContext('2d');
         tempCanvas.width = config.viewport.width;
         tempCanvas.height = config.viewport.height;
-
-        const zoom = 4;
 
         const image = ImageLoader.instance.fromName('mockup.png', Vector.null(), new Vector(config.viewport.width, config.viewport.height), Vector.null());
         image.draw(tempCtx);
@@ -44,22 +43,22 @@ export default class Game {
             }
         }
 
-        const imageDataGrid = new Grid<[number, number, number, number]>(config.viewport.width * zoom, config.viewport.height * zoom);
+        const imageDataGrid = new Grid<[number, number, number, number]>(config.viewport.width * this.zoom, config.viewport.height * this.zoom);
         for (let y = 0; y < tempImageDataGrid.height; y++) {
             for (let x = 0; x < tempImageDataGrid.width; x++) {
-                for (let i = 0; i < zoom; i++) {
-                    for (let j = 0; j < zoom; j++) {
-                        imageDataGrid.set(x * zoom + i, y * zoom + j, tempImageDataGrid.get(x, y));
+                for (let i = 0; i < this.zoom; i++) {
+                    for (let j = 0; j < this.zoom; j++) {
+                        imageDataGrid.set(x * this.zoom + i, y * this.zoom + j, this.pattern.getColor(tempImageDataGrid.get(x, y), i, j));
                     }
                 }
             }
         }
 
-        const imageData = window.ctx.createImageData(config.viewport.width * zoom, config.viewport.height * zoom);
+        const imageData = window.ctx.createImageData(config.viewport.width * this.zoom, config.viewport.height * this.zoom);
         for (let i = 0; i < imageData.data.length; i += 4) {
             const j = i / 4;
-            const x = j % (config.viewport.width * zoom);
-            const y = Math.floor(j / config.viewport.width / zoom);
+            const x = j % (config.viewport.width * this.zoom);
+            const y = Math.floor(j / config.viewport.width / this.zoom);
             const data = imageDataGrid.get(x, y);
             if (data !== null) {
                 imageData.data[i] = data[0];
@@ -72,9 +71,5 @@ export default class Game {
         window.ctx.putImageData(imageData, 0, 0);
 
         requestAnimationFrame(() => this.update());
-    }
-
-    get timer(): number {
-        return this._timer;
     }
 }
