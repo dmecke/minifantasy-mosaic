@@ -1,0 +1,26 @@
+{
+    "name": "mosaic",
+    "scripts": {
+        "start": "webpack serve --config webpack.js",
+        "build": "webpack --config webpack.js"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.40.0",
+        "@typescript-eslint/parser": "^5.40.0",
+        "eslint": "^8.25.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-webpack-plugin": "^3.2.0",
+        "file-loader": "^6.2.0",
+        "html-webpack-plugin": "^5.5.0",
+        "json-loader": "^0.5.7",
+        "ts-loader": "^9.4.1",
+        "typescript": "^4.8.4",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-dev-server": "^4.11.1"
+    },
+    "dependencies": {
+        "nanoid": "^4.0.0",
+        "seedrandom": "^3.0.5"
+    }
+}
